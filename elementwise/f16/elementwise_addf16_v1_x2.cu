@@ -8,11 +8,17 @@
 #define WARP_SIZE 32
 #define BLOCK_SIZE 256
 
-__global__ void elementwise_addf16(const __half *a, const __half *b, __half *c,
-                                   int n) {
-  int idx = blockIdx.x * blockDim.x + threadIdx.x;
+#define HALF2(value) (reinterpret_cast<half2 *>(&(value))[0])
+
+__global__ void elementwise_addf16(__half *a, __half *b, __half *c, int n) {
+  int idx = 2 * (blockIdx.x * blockDim.x + threadIdx.x);
   if (idx < n) {
-    c[idx] = a[idx] + b[idx];
+    half2 reg_a = HALF2(a[idx]);
+    half2 reg_b = HALF2(b[idx]);
+    half2 reg_c;
+    reg_c.x = __hadd(reg_a.x, reg_b.x);
+    reg_c.y = __hadd(reg_a.y, reg_b.y);
+    HALF2(c[idx]) = reg_c;
   }
 }
 
@@ -38,7 +44,7 @@ int main() {
   cudaEventCreate(&stop);
   cudaEventRecord(start);
 
-  elementwise_addf16<<<(N + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE>>>(
+  elementwise_addf16<<<(N + BLOCK_SIZE - 1) / BLOCK_SIZE, BLOCK_SIZE / 2>>>(
       d_a, d_b, d_c, N);
   cudaEventRecord(stop);
   cudaEventSynchronize(stop);

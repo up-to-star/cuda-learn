@@ -5,3 +5,19 @@ target_link_libraries(elementwise_addf16_v0_naive PRIVATE CUDA::cudart ${CUDA_cu
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_options(elementwise_addf16_v0_naive PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-G>)
 endif()
+
+add_executable(elementwise_addf16_v1_x2 elementwise_addf16_v1_x2.cu)
+
+target_link_libraries(elementwise_addf16_v1_x2 PRIVATE CUDA::cudart ${CUDA_cublas_LIBRARY})
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(elementwise_addf16_v1_x2 PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-G>)
+endif()
+
+add_executable(elementwise_addf16_v2_x8 elementwise_addf16_v2_x8.cu)
+
+target_link_libraries(elementwise_addf16_v2_x8 PRIVATE CUDA::cudart ${CUDA_cublas_LIBRARY})
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(elementwise_addf16_v2_x8 PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:-G>)
+endif()
