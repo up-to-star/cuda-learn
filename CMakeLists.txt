@@ -11,3 +11,4 @@ find_package(CUDAToolkit)
 # set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(reduce_sum)
+add_subdirectory(elementwise)
