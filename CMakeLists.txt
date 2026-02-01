@@ -12,3 +12,4 @@ find_package(CUDAToolkit)
 
 add_subdirectory(reduce_sum)
 add_subdirectory(elementwise)
+add_subdirectory(sigmoid)
